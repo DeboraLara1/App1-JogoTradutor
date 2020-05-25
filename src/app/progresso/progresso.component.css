@@ -1,0 +1,8 @@
+.progress{
+    background: hsl(80, 38%, 84%);
+    border: solid 1px #99ce28;
+}
+
+.progress-bar {
+    background: #99ce28;
+}
