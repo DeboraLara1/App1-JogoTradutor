@@ -32,8 +32,19 @@ export class PainelComponent implements OnInit {
     //console.log(this.resposta)
   }
 
-  public verificandoResposta():void {
-    console.log ('verificar resposta:', this.resposta)
-  }
+  public verificandoResposta(): void {
 
+    if (this.rodadaFrase.frasePtBr == this.resposta) {
+      alert('A tradução esta correta')
+      console.log('verificar resposta:', this.resposta)
+      //trocar pergunta da rodada
+      this.rodada++
+      console.log(this.rodada)
+      //Atualiza o obejeto rodada frase
+      this.rodadaFrase = this.frases[this.rodada]
+
+    } else {
+      alert('A tradução esta incorreta')
+    }
+  }
 }
