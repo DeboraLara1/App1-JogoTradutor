@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, EventEmitter, Output, OnDestroy } from '@angular/core';
 
 import { Frase } from './../shered/frase.model';
 import { FRASES } from './frases-mock'
@@ -8,7 +8,7 @@ import { FRASES } from './frases-mock'
   templateUrl: './painel.component.html',
   styleUrls: ['./painel.component.css']
 })
-export class PainelComponent implements OnInit {
+export class PainelComponent implements OnInit, OnDestroy {
 
   public frases: Frase[] = FRASES
   public instrucao: string = 'Traduza a frase:'
@@ -21,11 +21,16 @@ export class PainelComponent implements OnInit {
 
   public tentativas: number = 3
 
+  @Output() public encerrarJogo: EventEmitter<string> = new EventEmitter()
+
   constructor() { 
     this.atualizaRodada()
   }
 
   ngOnInit() {
+  }
+
+  ngOnDestroy() {
   }
 
   public atualizaResposta(resposta: Event): void {
@@ -44,7 +49,7 @@ export class PainelComponent implements OnInit {
 
       //
       if(this.rodada === 4) {
-        alert('Concluiu as traduções com sucesso!')
+        this.encerrarJogo.emit('vitoria')
       }
 
       //atualiza o objeto rodadaFrase 
@@ -55,7 +60,7 @@ export class PainelComponent implements OnInit {
       this.tentativas--
 
       if(this.tentativas === -1) {
-        alert('Você perdeu todas as tentativas')
+        this.encerrarJogo.emit('derrota')
       }
     }
   }
