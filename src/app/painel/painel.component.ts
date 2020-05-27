@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+
+import { Frase } from './../shered/frase.model';
 import { FRASES } from './frases-mock'
-import { Frases } from '../shered/frase.model';
 
 @Component({
   selector: 'app-painel',
@@ -9,48 +10,63 @@ import { Frases } from '../shered/frase.model';
 })
 export class PainelComponent implements OnInit {
 
-  public frases: Frases[] = FRASES
-  public instrucao: string = "Traduza a frase:"
-  public resposta: string
+  public frases: Frase[] = FRASES
+  public instrucao: string = 'Traduza a frase:'
+  public resposta: string = ''
 
   public rodada: number = 0
-  public rodadaFrase: Frases
+  public rodadaFrase: Frase
 
-  public progreso: number = 0
+  public progresso: number = 0
 
+  public tentativas: number = 3
 
-  constructor() {
-    this.rodadaFrase = this.frases[this.rodada]
-    console.log (this.rodadaFrase);
-   }
-
-  ngOnInit(): void {
+  constructor() { 
+    this.atualizaRodada()
   }
-  //Retorna o valor digitado no html, com auxilio do <HTMLInputElement> é possivel
-  // chamar o value que se encontra dentro do script, sem ele não conseguimos pois declara erro((<HTMLInputElement>resposta.target).value)
-  // se faz necessario isolar a resposta.target para poder pegar o value
-  public atualizaResposta(resposta: Event):void{
-    this.resposta = ((<HTMLInputElement>resposta.target).value)
+
+  ngOnInit() {
+  }
+
+  public atualizaResposta(resposta: Event): void {
+    this.resposta = (<HTMLInputElement>resposta.target).value
     //console.log(this.resposta)
   }
 
-  public verificandoResposta(): void {
+  public verificarResposta(): void {
+    if(this.rodadaFrase.frasePtBr == this.resposta) {
 
-    if (this.rodadaFrase.frasePtBr == this.resposta) {
-      alert('A tradução esta correta')
-      console.log('verificar resposta:', this.resposta)
       //trocar pergunta da rodada
       this.rodada++
 
-      //Progresso da barra
-      this.progreso= this.progreso + (100/this.frases.length)
-      console.log(this.progreso)
+      //progresso
+      this.progresso = this.progresso + (100 / this.frases.length)
 
-      //Atualiza o obejeto rodada frase
-      this.rodadaFrase = this.frases[this.rodada]
+      //
+      if(this.rodada === 4) {
+        alert('Concluiu as traduções com sucesso!')
+      }
+
+      //atualiza o objeto rodadaFrase 
+      this.atualizaRodada()
 
     } else {
-      alert('A tradução esta incorreta')
+      //diminuir a variável tentativas
+      this.tentativas--
+
+      if(this.tentativas === -1) {
+        alert('Você perdeu todas as tentativas')
+      }
     }
   }
+
+  public atualizaRodada(): void {
+
+    //define a frase da rodada com base em alguma lógica
+    this.rodadaFrase = this.frases[this.rodada]
+
+    //limpar a resposta
+    this.resposta = ''
+  }
+
 }
